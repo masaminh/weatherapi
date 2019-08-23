@@ -1,0 +1,22 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  weatherapi
+
+Globals:
+  Function:
+    Timeout: 30
+    CodeUri: src/
+    Runtime: python3.7
+
+Resources:
+  WeatherHourlyFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: app.hourly_handler
+      Events:
+        RaceDays:
+          Type: Api
+          Properties:
+            Path: /hourly/{code}
+            Method: get
