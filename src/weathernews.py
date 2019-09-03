@@ -24,7 +24,7 @@ def get_hourly(code):
 
     url = citycode.get_weathernews_urls(code).hourly
     response = requests.get(url)
-    soup = BeautifulSoup(response.content, 'html5lib')
+    soup = BeautifulSoup(response.content, 'lxml')
 
     days = soup.select('div.weather-day')
     for day in days:

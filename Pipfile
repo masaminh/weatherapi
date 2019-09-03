@@ -11,8 +11,8 @@ pydocstyle = "*"
 [packages]
 requests = "*"
 beautifulsoup4 = "*"
-html5lib = "*"
 aws-xray-sdk = "*"
+lxml = "*"
 
 [requires]
 python_version = "3.7"

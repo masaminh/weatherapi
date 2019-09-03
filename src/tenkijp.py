@@ -22,7 +22,7 @@ def get_hourly(code):
 
     url = citycode.get_tenkijp_urls(code).hourly
     response = requests.get(url)
-    soup = BeautifulSoup(response.content, 'html5lib')
+    soup = BeautifulSoup(response.content, 'lxml')
     tables = soup.select('table.forecast-point-1h')
 
     for table in tables:
