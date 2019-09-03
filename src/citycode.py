@@ -5,6 +5,22 @@ from collections import namedtuple
 Urls = namedtuple('Urls', 'hourly')
 
 
+def get_cityname(code):
+    """市町村名を取得する.
+
+    Arguments:
+        code {str} -- 市町村コード
+
+    Returns:
+        str -- 市町村名
+
+    """
+    if code != '01101':
+        return None
+
+    return "札幌市中央区"
+
+
 def get_tenkijp_urls(code):
     """tenki.jpのurlを取得する.
 

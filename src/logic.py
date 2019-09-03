@@ -1,6 +1,7 @@
 """WeatherAPIのロジック."""
 import copy
 
+import citycode
 import tenkijp
 import weathernews
 
@@ -23,14 +24,17 @@ def get_hourly(code):
     available_times = tenkijp_keyset.intersection(weathernews_keyset)
     available_times_list = sorted(list(available_times))
 
-    result = [
-        {
-            'time':  time.isoformat(timespec='minutes'),
-            'tenkijp': _get_weather_dict(tenkijp_weathers[time]),
-            'weathernews': _get_weather_dict(weathernews_weathers[time])
-        }
-        for time in available_times_list
-    ]
+    result = {
+        'cityname': citycode.get_cityname(code),
+        'weathers': [
+            {
+                'time':  time.isoformat(timespec='minutes'),
+                'tenkijp': _get_weather_dict(tenkijp_weathers[time]),
+                'weathernews': _get_weather_dict(weathernews_weathers[time])
+            }
+            for time in available_times_list
+        ]
+    }
 
     return result
 
