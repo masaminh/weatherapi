@@ -35,6 +35,9 @@ def hourly_handler(event, context):
 def _get_apigateway_response(obj):
     response = {
         'statusCode': 200,
+        'headers': {
+            'Access-Control-Allow-Origin': '*'
+        },
         'body': json.dumps(obj, ensure_ascii=False)
     }
 
