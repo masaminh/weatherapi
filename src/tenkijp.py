@@ -19,7 +19,7 @@ def get_hourly(code):
         list -- 1時間毎の天気情報.
 
     """
-    hourly_weathers = dict()
+    hourly_weathers = []
 
     url = citycode.get_tenkijp_urls(code).hourly
     response = requests.get(url)
@@ -34,29 +34,25 @@ def get_hourly(code):
         date = datetime.strptime(datestr, '%Y年%m月%d日').date()
 
         weathers = table.select('tr.weather td')
-        for i, weather in enumerate(weathers):
-            time = _get_time(date, i)
-            weather_text = weather.p.text
-            weather_icon = weather.img['src']
-            hourly_weathers[time] = {
-                'time': time, 'weather': weather_text,
-                'weather_icon': weather_icon}
-
         temperatures = [p.text for p in table.select('tr.temperature span')]
-        for i, temperature in enumerate(temperatures):
-            time = _get_time(date, i)
-            hourly_weathers[time]['temperature'] = float(temperature)
-
         precipitations = [
             p.text for p in table.select('tr.precipitation span')]
-        for i, precipitation in enumerate(precipitations):
+
+        for i in range(24):
             time = _get_time(date, i)
-            hourly_weathers[time]['precipitation'] = float(precipitation)
+            weather = weathers[i]
+            temperature = temperatures[i]
+            precipitation = precipitations[i]
+            weather_text = weather.p.text
+            weather_icon = weather.img['src']
+            hourly_weathers.append({
+                'time': time, 'weather': weather_text,
+                'weather_icon': weather_icon,
+                'temperature': float(temperature),
+                'precipitation': float(precipitation)
+            })
 
-    result = list(hourly_weathers.values())
-    result.sort(key=lambda x: x['time'])
-
-    return result
+    return hourly_weathers
 
 
 def _get_time(date, index):
