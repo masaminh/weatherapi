@@ -1,11 +1,14 @@
 """WeatherAPIのロジック."""
 import copy
 
+from aws_xray_sdk.core import xray_recorder
+
 import citycode
 import tenkijp
 import weathernews
 
 
+@xray_recorder.capture('logic.get_hourly')
 def get_hourly(code):
     """1時間毎天気予報を取得する.
 

@@ -4,11 +4,13 @@ import re
 from urllib.parse import urljoin
 
 import requests
+from aws_xray_sdk.core import xray_recorder
 from bs4 import BeautifulSoup
 
 import citycode
 
 
+@xray_recorder.capture('weathernews.get_hourly')
 def get_hourly(code):
     """1時間毎天気予報を取得する.
 

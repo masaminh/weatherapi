@@ -1,13 +1,14 @@
 """tenki.jpの予報を取得する."""
-from datetime import datetime
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 import requests
+from aws_xray_sdk.core import xray_recorder
 from bs4 import BeautifulSoup
 
 import citycode
 
 
+@xray_recorder.capture('tenkijp.get_hourly')
 def get_hourly(code):
     """1時間毎天気予報を取得する.
 
