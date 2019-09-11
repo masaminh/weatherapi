@@ -25,6 +25,9 @@ def hourly_handler(event, context):
     """
     del context
 
+    if 'pathParameters' not in event:
+        return _get_apigateway_response(None, 400, 'Bad Request')
+
     code = event['pathParameters']['code']
 
     result = logic.get_hourly(code)
@@ -32,13 +35,15 @@ def hourly_handler(event, context):
     return response
 
 
-def _get_apigateway_response(obj):
+def _get_apigateway_response(obj, statusCode=200, message='OK'):
+    body = obj.copy() if obj else dict()
+    body['message'] = message
     response = {
-        'statusCode': 200,
+        'statusCode': statusCode,
         'headers': {
             'Access-Control-Allow-Origin': '*'
         },
-        'body': json.dumps(obj, ensure_ascii=False)
+        'body': json.dumps(body, ensure_ascii=False)
     }
 
     return response

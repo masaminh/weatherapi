@@ -15,8 +15,12 @@ Resources:
     Properties:
       Handler: app.hourly_handler
       Events:
-        RaceDays:
+        WeatherHourly:
           Type: Api
           Properties:
             Path: /hourly/{code}
             Method: get
+        WeatherHourlyTimer:
+          Type: Schedule
+          Properties:
+            Schedule: rate(5 minutes)

@@ -1,5 +1,6 @@
 """WeatherAPIのロジック."""
 import copy
+from concurrent.futures import ThreadPoolExecutor
 
 from aws_xray_sdk.core import xray_recorder
 
@@ -19,8 +20,14 @@ def get_hourly(code):
         list -- 1時間毎の天気情報.
 
     """
-    tenkijp_weathers = {x['time']: x for x in tenkijp.get_hourly(code)}
-    weathernews_weathers = {x['time']: x for x in weathernews.get_hourly(code)}
+    with ThreadPoolExecutor() as executor:
+        tenkijp_future = executor.submit(_tenkijp_hourly_task, code)
+        weathernews_future = executor.submit(_weathernews_hourly_task, code)
+
+        tenkijp_weathers = {x['time']: x for x in tenkijp_future.result()}
+        weathernews_weathers = {
+            x['time']: x for x in weathernews_future.result()}
+
     tenkijp_keyset = set(tenkijp_weathers.keys())
     weathernews_keyset = set(weathernews_weathers.keys())
 
@@ -46,3 +53,11 @@ def _get_weather_dict(weather):
     weather_dict = copy.copy(weather)
     del weather_dict['time']
     return weather_dict
+
+
+def _tenkijp_hourly_task(x):
+    return tenkijp.get_hourly(x)
+
+
+def _weathernews_hourly_task(x):
+    return weathernews.get_hourly(x)
