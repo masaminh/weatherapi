@@ -20,7 +20,7 @@ def hourly_handler(event, context):
         context {object} -- コンテキスト
 
     Returns:
-        str -- json文字列
+        str -- json文字列用dict
 
     """
     del context
@@ -32,6 +32,25 @@ def hourly_handler(event, context):
 
     result = logic.get_hourly(code)
     response = _get_apigateway_response(result)
+    return response
+
+
+def options_handler(event, context):
+    """OPTIONS.
+
+    Arguments:
+        event {dict} -- イベント情報
+        context {object} -- コンテキスト
+
+    Returns:
+        str -- json文字列用dict
+
+    """
+    del event
+    del context
+
+    response = _get_apigateway_response(None)
+    response['headers']['Access-Control-Allow-Methods'] = 'OPTIONS,GET'
     return response
 
 

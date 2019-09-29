@@ -24,3 +24,13 @@ Resources:
           Type: Schedule
           Properties:
             Schedule: rate(5 minutes)
+  WeatherHourlyOptionsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: app.options_handler
+      Events:
+        WeatherHourlyOptions:
+          Type: Api
+          Properties:
+            Path: /hourly/{code}
+            Method: options
